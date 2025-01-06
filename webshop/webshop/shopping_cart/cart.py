@@ -11,14 +11,14 @@ from frappe.utils.nestedset import get_root_of
 
 from erpnext.accounts.utils import get_account_name
 from webshop.webshop.doctype.webshop_settings.webshop_settings import (
-	get_shopping_cart_settings,
+    get_shopping_cart_settings,
 )
 from webshop.webshop.utils.product import get_web_item_qty_in_stock
 from erpnext.selling.doctype.quotation.quotation import _make_sales_order
 
 
 class WebsitePriceListMissingError(frappe.ValidationError):
-	pass
+    pass
 
 
 def set_cart_count(quotation=None):
@@ -94,7 +94,7 @@ def place_order():
 
 	quotation.flags.ignore_permissions = True
 	quotation.submit()
- 
+
 	if quotation.quotation_to == "Lead" and quotation.party_name:
 		# company used to create customer accounts
 		frappe.defaults.set_user_default("company", quotation.company)
@@ -110,13 +110,12 @@ def place_order():
 	sales_order.payment_schedule = []
 
 	if not cint(cart_settings.allow_items_not_in_stock):
-		frappe.throw("Here you are reaching")
 		for item in sales_order.get("items"):
 			item.warehouse = frappe.db.get_value(
 				"Website Item", {"item_code": item.item_code}, "website_warehouse"
 			)
 			is_stock_item = frappe.db.get_value("Item", item.item_code, "is_stock_item")
-			frappe.throw("Not here")
+
 			if is_stock_item:
 				item_stock = get_web_item_qty_in_stock(
 					item.item_code, "website_warehouse"
@@ -129,8 +128,8 @@ def place_order():
 							item_stock.stock_qty, item.item_code
 						)
 					)
+
 	sales_order.flags.ignore_permissions = True
-	
 	sales_order.insert()
 	sales_order.submit()
 
@@ -646,12 +645,12 @@ def get_debtors_account(cart_settings):
 
 
 def get_address_docs(
-	doctype=None,
-	txt=None,
-	filters=None,
-	limit_start=0,
-	limit_page_length=20,
-	party=None,
+    doctype=None,
+    txt=None,
+    filters=None,
+    limit_start=0,
+    limit_page_length=20,
+    party=None,
 ):
 	if not party:
 		party = get_party()
